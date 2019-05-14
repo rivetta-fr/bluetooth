@@ -12,8 +12,8 @@ import struct, sys
 from PyOBEX import client, headers, responses
 
 # config var
-pathtofile='/home/claudior/Documents/bluetooth/'
-filetosend="vrt.jpg"
+pathtofile='/var/www/html/progetti/vrt-project/bluetooth/android/'
+filetosend="veryroadtrip.html"
 looptime=10
 table_name = "clients"
 
@@ -35,7 +35,7 @@ con.commit()
 while 1>0:
     # start scan max 10 responses without cache
     print(time.ctime() + " - scanning for device...")
-    dev_scan = "hcitool scan --numrsp=10 --flush"    
+    dev_scan = "hcitool scan --numrsp=10 --flush"
     list_dev=os.popen(dev_scan)
     tot= list_dev.read()
     tot= tot.split("\n")
@@ -52,7 +52,7 @@ while 1>0:
         print(time.ctime() + " - Found \"" + dev[2] + "\" channel:"+ channel)
         if channel != "":
             # Start flow to send file
-            print("Try to send file to " + dev[2]) 
+            print("Try to send file to " + dev[2])
             send_file= "obexftp -b 00:" + dev[1] + " -p " + filetosend
             # Search mac address into DB in order to not send twice to same device
             cur = con.cursor()
@@ -68,7 +68,7 @@ while 1>0:
                     contents = f.read()
                 # crete client, connect to it and send file by obexFtp
                 c = client.Client(dev[1], int(channel))
-                r = c.connect()                
+                r = c.connect()
                 if not isinstance(r, responses.ConnectSuccess):
                     sys.stderr.write("Failed to connect.\n")
                     sys.exit(1)
@@ -85,5 +85,5 @@ while 1>0:
                 cur.execute(query)
                 con.commit()
             elif row[0] > 0:
-                print(dev[1] +" already present in database. Not sending file.")                
+                print(dev[1] +" already present in database. Not sending file.")
     time.sleep(looptime)
