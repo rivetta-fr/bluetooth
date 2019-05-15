@@ -12,7 +12,7 @@ import struct, sys
 from PyOBEX import client, headers, responses
 
 # config var
-pathtofile='/var/www/html/progetti/vrt-project/bluetooth/android/'
+pathtofile='/home/claudior/Documents/bluetooth/bluetooth/'
 filetosend="veryroadtrip.html"
 looptime=10
 table_name = "clients"
