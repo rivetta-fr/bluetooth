@@ -35,7 +35,7 @@ con.commit()
 while 1>0:
     # start scan max 10 responses without cache
     print(time.ctime() + " - scanning for device...")
-    dev_scan = "hcitool scan --numrsp=10 --flush"
+    dev_scan = "hcitool -i hci0 scan --numrsp=10 --flush"
     list_dev=os.popen(dev_scan)
     tot= list_dev.read()
     tot= tot.split("\n")
@@ -86,4 +86,10 @@ while 1>0:
                 con.commit()
             elif row[0] > 0:
                 print(dev[1] +" already present in database. Not sending file.")
+    # start Ibeacon
+    print(time.ctime() + " - Start ibeacon...")
+    dev_scan = "hcitool -i hci0 cmd 0x08 0x0008 1E 02 01 1A 1A FF 4C 00 02 15 fc f1 e1 f8 27 c5 41 ef 9b d1 11 56 ca 97 28 74 00 00 00 00 C8" #fcf1e1f827c541ef9bd11156ca972874
+    os.popen(dev_scan)
+    # send during 10 sec
     time.sleep(looptime)
+    print(time.ctime() + " - Stop ibeacon...")
