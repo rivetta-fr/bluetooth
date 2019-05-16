@@ -65,17 +65,21 @@ while 1>0:
                 #  Get File Content
                 with open(pathtofile + filetosend, 'rb') as f:
                     contents = f.read()
-                # crete client, connect to it and send file by obexFtp
+                # create client, connect to it and send file by obexFtp
                 c = client.Client(dev[1], int(channel))
-                r = c.connect()
-                if not isinstance(r, responses.ConnectSuccess):
-                    sys.stderr.write("Failed to connect.\n")
-                    sys.exit(1)
-                else:
-                    rs=c.put(filetosend, contents)
-                    if isinstance(rs, responses.Success):
-                        print("Normally file sent to " + dev[2] )
-                c.disconnect()
+                try:
+
+                    r = c.connect()
+                    if not isinstance(r, responses.ConnectSuccess):
+                        sys.stderr.write("Failed to connect.\n")
+                        sys.exit(1)
+                    else:
+                        rs=c.put(filetosend, contents)
+                        if isinstance(rs, responses.Success):
+                            print("Normally file sent to " + dev[2] )
+                    c.disconnect()
+                except:
+                    print("Impossible to reach client.")
 
                 # insert device into db
                 date=time.strftime("%s")
