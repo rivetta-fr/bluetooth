@@ -14,17 +14,16 @@ from PyOBEX import client, headers, responses
 # config var
 pathtofile='/home/claudior/Documents/bluetooth/bluetooth/'
 filetosend="veryroadtrip.html"
-looptime=10
+looptime=20
 table_name = "clients"
 
 # connect to db sqlite
 con = sqlite3.connect("./bluespam.sql")
-
-# drop  table (only for dev)
 cur = con.cursor()
-query="drop table " + table_name + ";"
-cur.execute(query)
-con.commit()
+# drop  table (only for dev)
+# query="drop table " + table_name + ";"
+# cur.execute(query)
+# con.commit()
 # end drop table (only for dev)
 # create table cleints into sqlite
 query="CREATE TABLE IF NOT EXISTS " + table_name + "(id INTEGER PRIMARY KEY ASC, timestamp INT, name TEXT, mac TEXT);"
@@ -88,8 +87,12 @@ while 1>0:
                 print(dev[1] +" already present in database. Not sending file.")
     # start Ibeacon
     print(time.ctime() + " - Start ibeacon...")
-    dev_scan = "hcitool -i hci0 cmd 0x08 0x0008 1E 02 01 1A 1A FF 4C 00 02 15 fc f1 e1 f8 27 c5 41 ef 9b d1 11 56 ca 97 28 74 00 00 00 00 C8" #fcf1e1f827c541ef9bd11156ca972874
+    # hcitool -i hci0 cmd 0x08 0x0008 1E 02 01 1A 1A FF 4C 00 02 15 63 6F 3F 8F 64 91 4B EE 95 F7 D8 CC 64 A8 63 B5 00 00 00 00 C8 00
+    dev_scan = "hcitool -i hci0 cmd 0x08 0x0008 1E 02 01 1A 1A FF 4C 00 02 15 1F 99 A0 81 95 E3 41 60 B2 88 09 92 28 3D 54 7B 00 00 00 00 C8 00" #1f99a081-95e3-4160-b288-0992283d547b   
+    os.popen("hciconfig hci0 leadv 3")
+    os.popen("hciconfig hci0 noscan")
     os.popen(dev_scan)
     # send during 10 sec
     time.sleep(looptime)
+    os.popen("hciconfig hci0 noleadv")
     print(time.ctime() + " - Stop ibeacon...")
